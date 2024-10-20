@@ -1,5 +1,6 @@
-import os, time
-from colorama import init, Fore
+import os
+import time
+from colorama import init, Fore, Style
 
 # Initialize colorama
 init(autoreset=True)
@@ -16,30 +17,37 @@ class Taskiy:
         while True:
             self.view_choices()
     
-    def view_tasks(self):
-        """
-        A function to view all the tasks. If there are no tasks, it will prompt the user to create one!
+    def view_tasks(self, extra_prompt: bool = False):
+        """View all tasks, prompt to create one if none exist.
+            the variable 'extra_prompt' is so it can say, here are all of the tasks before deletion.
         """
         clear()
         
         if self.tasks:
-            print("\nHere are all of the tasks!\n")
+            if extra_prompt == True:
+                print(Fore.LIGHTMAGENTA_EX + "Because you are about to delete all of the tasks here they are just to view them before deletion. " + Fore.RESET)
+                
+                
+            print(Fore.CYAN + "\nHere are all of the tasks:\n" + Fore.RESET)
             for i, task in enumerate(self.tasks, start=1):
                 print(f"{i}. - {Fore.GREEN}{task.capitalize()}{Fore.RESET}")
         else:
-            print(Fore.RED + "Looks like there are no tasks! Make one!" + Fore.RESET)
-        input("\nPress Enter to return to the main menu...")
+            print(Fore.RED + "Looks like there are no tasks! Create one!" + Fore.RESET)
+        
+        if extra_prompt == True:
+            input(Fore.YELLOW + "\nPress Enter to continue..." + Fore.RESET)
+        else:
+    
+            input(Fore.YELLOW + "\nPress Enter to return to the main menu..." + Fore.RESET)
         clear()
             
     def add_task(self):
-        """ 
-        Adds a task from the user's input and capitalizes it. Typing 'exit' returns to the main menu.
-        """
+        """Adds a task from user input, can exit to main menu."""
         clear()
-        print("Type in the name of the task or type 'exit' to go back to the main screen.")
+        print(Fore.CYAN + "Type the name of the task or type 'exit' to go back." + Fore.RESET)
         
         while True:
-            _new_task_name: str = input(Fore.GREEN + "New Task: " + Fore.RESET).strip()
+            _new_task_name: str = input(Fore.LIGHTYELLOW_EX + "New Task: " + Fore.RESET).strip()
 
             if _new_task_name.lower() == "exit":
                 clear()
@@ -54,14 +62,12 @@ class Taskiy:
                 print(Fore.RED + "Task name cannot be empty!" + Fore.RESET)
         
     def delete_task(self):
-        """
-        Delete a task by typing its number. If the list is empty, it prompts the user to add tasks.
-        """
+        """Delete a task by typing its number; prompt if no tasks exist."""
         clear()
         
         if self.tasks:
             while True:
-                self.view_tasks()
+                self.view_tasks(True)
                 try:
                     _task_to_delete: str = input(Fore.RED + "Enter the task number to delete (or type 'exit' to cancel): " + Fore.RESET).strip()
 
@@ -95,13 +101,11 @@ class Taskiy:
             clear()
     
     def view_choices(self):
-        """
-        Displays menu options and processes user input.
-        """
-        print("\n1. View Tasks")
+        """Displays menu options and processes user input."""
+        print(Fore.LIGHTMAGENTA_EX + "\n1. View Tasks")
         print("2. Add a Task")
         print("3. Delete a Task")
-        print("4. Exit")
+        print("4/exit. Exit" + Fore.RESET)
         
         _given_input = input(Fore.MAGENTA + "\nWhat would you like to do? - " + Fore.RESET).strip()
 
